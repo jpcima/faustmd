@@ -224,6 +224,12 @@ static void dump_widgets(std::ostream &o, const std::vector<Metadata::Widget> &w
         { o << separator << cstrlit(w.label); separator = ", "; }
     o << "};" "\n";
 
+    o << "\t" "FMSTATIC const char *const " << prefix << "_symbol[] = {";
+    separator = "";
+    for (const Metadata::Widget &w : widgets)
+        { o << separator << cstrlit(mangle(w.label)); separator = ", "; }
+    o << "};" "\n";
+
     o << "\t" "FMSTATIC const std::size_t " << prefix << "_offsets[] = {";
     separator = "";
     for (const Metadata::Widget &w : widgets)
