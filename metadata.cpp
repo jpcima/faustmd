@@ -224,10 +224,10 @@ static void dump_widgets(std::ostream &o, const std::vector<Metadata::Widget> &w
         { o << separator << cstrlit(w.label); separator = ", "; }
     o << "};" "\n";
 
-    o << "\t" "FMSTATIC constexpr std::size_t " << prefix << "_offsets[] = {";
+    o << "\t" "FMSTATIC const std::size_t " << prefix << "_offsets[] = {";
     separator = "";
     for (const Metadata::Widget &w : widgets)
-        { o << separator << "offsetof(FAUSTCLASS, " << w.var << ")"; separator = ", "; }
+        { o << separator << "(size_t)&((FAUSTCLASS *)0)->" << w.var; separator = ", "; }
     o << "};" "\n";
 
     o << "\t" "FMSTATIC constexpr FAUSTFLOAT " << prefix << "_init[] = {";
