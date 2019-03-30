@@ -13,7 +13,7 @@ clean:
 	rm -rf build
 
 install: bin/faustmd
-	install -D -m 755 bin/faustmd $(DESTDIR)$(PREFIX)/bin
+	install -D -m 755 bin/faustmd $(DESTDIR)$(PREFIX)/bin/faustmd
 
 bin/faustmd: $(OBJS)
 	@install -d $(dir $@)
