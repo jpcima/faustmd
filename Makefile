@@ -12,8 +12,8 @@ clean:
 	rm -rf bin
 	rm -rf build
 
-install: metafaust
-	install -D -m 755 metafaust $(DESTDIR)$(PREFIX)/bin
+install: bin/faustmd
+	install -D -m 755 bin/faustmd $(DESTDIR)$(PREFIX)/bin
 
 bin/faustmd: $(OBJS)
 	@install -d $(dir $@)
