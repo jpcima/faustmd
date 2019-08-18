@@ -66,6 +66,9 @@ int call_faust(const std::string &dspfile, pugi::xml_document &docmd, const Faus
         fargv.push_back((char *)faustargs.processname.c_str());
     }
 
+    for (const std::string &arg : faustargs.miscargs)
+        fargv.push_back((char *)arg.c_str());
+
     fargv.push_back(nullptr);
     if (execute(fargv.data()) == -1)
         return -1;

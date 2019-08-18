@@ -79,6 +79,9 @@ static int do_cmdline(Cmd_Args &cmd, int argc, char *argv[])
             }
             cmd.faustargs.processname = argv[i];
         }
+        else if (moreflags && arg.subspan(0, 2) == "-X") {
+            cmd.faustargs.miscargs.emplace_back(arg.begin() + 2, arg.end());
+        }
         else if (moreflags && !arg.empty() && arg[0] == '-') {
             errs() << "Unrecognized flag `" << arg << "`\n";
             return -1;

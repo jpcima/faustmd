@@ -12,6 +12,7 @@ struct Faust_Args {
     std::string classname;
     std::string processname;
     std::vector<std::string> incdirs;
+    std::vector<std::string> miscargs;
 };
 
 int call_faust(const std::string &dspfile, pugi::xml_document &docmd, const Faust_Args &faustargs);
