@@ -282,16 +282,32 @@ static void dump_widgets(std::ostream &o, const std::vector<Metadata::Widget> &w
 
     o << "\n";
 
+    bool have_metadata = false;
+    for (size_t i = 0, n = widgets.size(); i < n; ++i) {
+        const Metadata::Widget &w = widgets[i];
+        if (w.metadata.empty())
+            continue;
+        o << "\t" "FMSTATIC const metadata_t " << prefix << "_metadata_" << i << "[] = {";
+        separator = "";
+        for (const std::pair<std::string, std::string> &md : w.metadata) {
+            o << separator << "{" << cstrlit(md.first) << ", " << cstrlit(md.second) << "}";
+            separator = ", ";
+        }
+        o << "};\n";
+        have_metadata = true;
+    }
+
+    if (have_metadata)
+        o << "\n";
+
     o << "\t" "FMSTATIC const metadata_t *const " << prefix << "_metadata[] = {";
     separator = "";
-    for (const Metadata::Widget &w : widgets) {
-        o << separator << "(metadata_t[]){";
-        const char *separator2 = "";
-        for (const std::pair<std::string, std::string> &md : w.metadata) {
-            o << separator2 << "{" << cstrlit(md.first) << ", " << cstrlit(md.second) << "}";
-            separator2 = ", ";
-        }
-        o << "}";
+    for (size_t i = 0, n = widgets.size(); i < n; ++i) {
+        const Metadata::Widget &w = widgets[i];
+        if (w.metadata.empty())
+            o << separator << "nullptr";
+        else
+            o << separator << prefix << "_metadata_" << i;
         separator = ", ";
     }
     o << "};" "\n";
