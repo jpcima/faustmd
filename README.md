@@ -16,6 +16,14 @@ faustmd MyProcessor.dsp >> MyProcessor.cpp
 
 It will probably require the flag `-uim` to make the instance variables accessible.
 
+**Note** if optimization flags are used, faustmd must be aware of these, or the generation may not match.
+You can pass faust flags to faustmd by using the `-X<flag>` argument.
+
+```
+faust -double -vec ...
+faustmd -X-double -X-vec ...
+```
+
 ## Features
 
 - general information
