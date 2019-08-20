@@ -29,6 +29,7 @@ struct Metadata {
         int id = 0;
         std::string label;
         std::string var;
+        std::string symbol;
         float init = 0;
         float min = 0;
         float max = 0;

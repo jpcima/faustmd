@@ -73,6 +73,8 @@ static int extract_widget(pugi::xml_node node, bool is_active, Metadata &md)
     w.label = node.child_value("label");
     w.var = node.child_value("varname");
 
+    w.symbol = mangle(w.label);
+
     if (is_active && (w.type == Metadata::Widget::Type::HSlider ||
                       w.type == Metadata::Widget::Type::VSlider ||
                       w.type == Metadata::Widget::Type::NEntry)) {
@@ -114,6 +116,8 @@ static int extract_widget(pugi::xml_node node, bool is_active, Metadata &md)
         }
         else if (key == "tooltip")
             w.tooltip = value;
+        else if (key == "md.symbol")
+            w.symbol = mangle(value);
     }
 
     (is_active ? md.active : md.passive).push_back(std::move(w));
@@ -226,15 +230,8 @@ static void dump_widgets(std::ostream &o, const std::vector<Metadata::Widget> &w
 
     o << "\t" "FMSTATIC const char *const " << prefix << "_symbol[] = {";
     separator = "";
-    for (const Metadata::Widget &w : widgets) {
-        const std::string *md_symbol = nullptr;
-        for (size_t i = 0, n = w.metadata.size(); i < n && !md_symbol; ++i)
-            if (w.metadata[i].first == "md.symbol")
-                md_symbol = &w.metadata[i].second;
-        if (!md_symbol)
-            md_symbol = &w.label;
-        o << separator << cstrlit(mangle(*md_symbol)); separator = ", ";
-    }
+    for (const Metadata::Widget &w : widgets)
+        { o << separator << cstrlit(w.symbol); separator = ", "; }
     o << "};" "\n";
 
     o << "\t" "FMSTATIC const std::size_t " << prefix << "_offsets[] = {";
@@ -340,13 +337,13 @@ static void dump_widgets(std::ostream &o, const std::vector<Metadata::Widget> &w
 
     if (is_active) {
         for (const Metadata::Widget &w : widgets) {
-            o << "\t" << "FMSTATIC inline void " << mangle("set_" + w.label) << "(FAUSTCLASS &x, FAUSTFLOAT v) {"
+            o << "\t" << "FMSTATIC inline void " << mangle("set_" + w.symbol) << "(FAUSTCLASS &x, FAUSTFLOAT v) {"
               << " x." << w.var << " = v; "
               << "}" "\n";
         }
     }
     for (const Metadata::Widget &w : widgets) {
-        o << "\t" << "FMSTATIC inline FAUSTFLOAT " << mangle("get_" + w.label) << "(const FAUSTCLASS &x) {"
+        o << "\t" << "FMSTATIC inline FAUSTFLOAT " << mangle("get_" + w.symbol) << "(const FAUSTCLASS &x) {"
           << " return x." << w.var << "; "
           << "}" "\n";
     }
